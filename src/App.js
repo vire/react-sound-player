@@ -42,7 +42,7 @@ const visualizeBuffer = (rawBuffer, canvas) => {
     }
   }
 
-  for (i = 0, j = 0; i < paintAreaWidth; i++, j+6) {
+  for (i = 0, j = 0; i < paintAreaWidth; i++, j+=6) {
     if (resampledBuffer[j + 1] !== 0) {
       resampledBuffer[j] /= resampledBuffer[j + 1]
     }
