@@ -1,5 +1,6 @@
 // see http://stackoverflow.com/questions/22073716/create-a-waveform-of-the-full-track-with-web-audio-api
 export const downsample = (buffer, targetCount) => {
+  console.log('downsample');
   const BUCKET_SIZE = 6;
   const channel = buffer.getChannelData(0); // left 0, right 1
   const resampledBuffer = new Float64Array(targetCount * BUCKET_SIZE)

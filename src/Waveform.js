@@ -8,7 +8,7 @@ export class Waveform extends Component {
   }
 
   componentWillReceiveProps(props) {
-    console.log('props', props)
+    console.log('componentWillReceiveProps Waveform()', props)
 
     if(props.buffer) {
       this.renderWaveform(props.buffer, this.refs.waveform.getDOMNode());
@@ -37,13 +37,13 @@ export class Waveform extends Component {
       context.lineTo(k, (buffer[idx + 3] + buffer[idx + 5]));
       context.stroke();
       //
-      context.strokeStyle = '#F00';
+      context.strokeStyle = '#A9A9A9';
       context.beginPath();
       context.moveTo(k, (buffer[idx] - buffer[idx + 2]));
       context.lineTo(k, (buffer[idx] + buffer[idx + 2]));
       context.stroke();
       //
-      context.strokeStyle = '#F00';
+      context.strokeStyle = '#A9A9A9';
       context.beginPath();
       context.moveTo(k, (buffer[idx + 3] + buffer[idx + 5]));
       context.lineTo(k, (buffer[idx + 3] - buffer[idx + 5]));
@@ -53,6 +53,7 @@ export class Waveform extends Component {
   }
 
   render() {
+    console.log('render: Waveform');
     const {
       width,
       height

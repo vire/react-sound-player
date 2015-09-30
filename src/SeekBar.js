@@ -6,7 +6,7 @@ export class SeekBar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.renderSeekBar(nextProps.progress);
+    // this.renderSeekBar(nextProps.progress);
   }
 
   renderSeekBar(progress) {
@@ -28,7 +28,7 @@ export class SeekBar extends Component {
       width,
       height
     } = this.props;
-
+    console.log('render: SeekBar + props', this.props);
     return (
       <div>
         <canvas ref="seekBar"
