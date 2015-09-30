@@ -5,12 +5,19 @@ export class Waveform extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      isInitialized: false,
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.buffer !== nextProps.buffer;
   }
 
   componentWillReceiveProps(props) {
     console.log('componentWillReceiveProps Waveform()', props)
 
-    if(props.buffer) {
+    if(props.buffer && !this.state.isInitialized) {
       this.renderWaveform(props.buffer, this.refs.waveform.getDOMNode());
     }
   }
@@ -37,19 +44,22 @@ export class Waveform extends Component {
       context.lineTo(k, (buffer[idx + 3] + buffer[idx + 5]));
       context.stroke();
       //
-      context.strokeStyle = '#A9A9A9';
+      context.strokeStyle = '#F00';
       context.beginPath();
       context.moveTo(k, (buffer[idx] - buffer[idx + 2]));
       context.lineTo(k, (buffer[idx] + buffer[idx + 2]));
       context.stroke();
       //
-      context.strokeStyle = '#A9A9A9';
+      context.strokeStyle = '#F00';
       context.beginPath();
       context.moveTo(k, (buffer[idx + 3] + buffer[idx + 5]));
       context.lineTo(k, (buffer[idx + 3] - buffer[idx + 5]));
       context.stroke();
     }
     context.restore();
+    this.setState({
+      isInitialized: true
+    })
   }
 
   render() {

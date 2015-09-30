@@ -21,10 +21,6 @@ class SoundPlayer extends React.Component {
     };
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state.player.buffer !== nextState.player.buffer;
-  }
-
   play() {
     const { context, buffer, isPlaying } = this.state.player;
     const source = context.createBufferSource();
@@ -45,6 +41,24 @@ class SoundPlayer extends React.Component {
         startTime: context.currentTime
       })
     });
+
+    const timeUpdater = (ts) => {
+      const { player } = this.state;
+      const currentTime = player.context.currentTime - player.startTime;
+
+      this.setState({
+        player: Object.assign({}, player, {
+          progress: currentTime / player.duration,
+          currentTime,
+        })
+      })
+
+      if (player.isPlaying) {
+        requestAnimationFrame(timeUpdater);
+      }
+    }
+
+    requestAnimationFrame(timeUpdater)
   }
 
   stop() {
@@ -89,7 +103,8 @@ class SoundPlayer extends React.Component {
                   width={canvasWidth}
                   height={canvasHeight}>
         </Waveform>
-        <SeekBar {...this.state.seekBar}
+        <SeekBar currentTime={this.state.player.currentTime}
+                  duration={this.state.player.duration}
                   width={canvasWidth}
                   height={canvasHeight}>
         </SeekBar>
