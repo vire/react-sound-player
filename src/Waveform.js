@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { downsample } from './waveform-utils';
 
+const WF_BACKGROUND_COLOR = '#FFF';
+const WF_CORE_COLOR = '#4A4A4A';
+const WF_WRAP_COLOR = '#D2D2D2'
+
 export class Waveform extends Component {
 
   constructor(props) {
@@ -15,7 +19,7 @@ export class Waveform extends Component {
   }
 
   componentWillReceiveProps(props) {
-    console.log('componentWillReceiveProps Waveform()', props)
+    // console.log('componentWillReceiveProps Waveform()', props)
 
     if(props.buffer && !this.state.isInitialized) {
       this.renderWaveform(props.buffer, this.refs.waveform.getDOMNode());
@@ -29,7 +33,7 @@ export class Waveform extends Component {
     const buffer = downsample(rawBuffer, canvas.width);
 
     context.save();
-    context.fillStyle = '#FFF' ;
+    context.fillStyle = WF_BACKGROUND_COLOR ;
     context.fillRect(0, 0, canvasWidth, canvasHeight );
     context.translate(0.5, canvasHeight / 2);
     context.scale(1, 200);
@@ -37,20 +41,20 @@ export class Waveform extends Component {
     for (let k = 0; k < canvasWidth; k++) {
       const idx = k * 6;
 
-      context.strokeStyle = '#4A4A4A';
+      context.strokeStyle = WF_CORE_COLOR;
       context.beginPath();
       context.beginPath();
       context.moveTo(k, (buffer[idx] - buffer[idx + 2]));
       context.lineTo(k, (buffer[idx + 3] + buffer[idx + 5]));
       context.stroke();
       //
-      context.strokeStyle = '#F00';
+      context.strokeStyle = WF_WRAP_COLOR;
       context.beginPath();
       context.moveTo(k, (buffer[idx] - buffer[idx + 2]));
       context.lineTo(k, (buffer[idx] + buffer[idx + 2]));
       context.stroke();
       //
-      context.strokeStyle = '#F00';
+      context.strokeStyle = WF_WRAP_COLOR;
       context.beginPath();
       context.moveTo(k, (buffer[idx + 3] + buffer[idx + 5]));
       context.lineTo(k, (buffer[idx + 3] - buffer[idx + 5]));

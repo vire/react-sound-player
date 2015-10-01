@@ -7,6 +7,11 @@ export class SeekBar extends Component {
 
   componentWillReceiveProps(nextProps) {
     // this.renderSeekBar(nextProps.progress);
+    this.renderSeekBar(nextProps.currentTime / nextProps.duration);
+  }
+
+  shouldComponentUpdate() {
+    return false // only if winow dimension changes or playback stops
   }
 
   renderSeekBar(progress) {
@@ -30,7 +35,7 @@ export class SeekBar extends Component {
     } = this.props;
     console.log('render: SeekBar + props', this.props);
     return (
-      <div>
+      <div onClick={this.props.seekClickHandler}>
         <canvas ref="seekBar"
                 width={width}
                 height={height}

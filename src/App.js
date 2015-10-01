@@ -21,18 +21,19 @@ class SoundPlayer extends React.Component {
     };
   }
 
-  play() {
+  play(event, id, ratio = 0) {
     const { context, buffer, isPlaying } = this.state.player;
     const source = context.createBufferSource();
-
+    const seekTime = ratio * buffer.duration;
     if (isPlaying) {
       console.log('Can\'t trigger play twice');
       return
     }
+    console.log(`seekTime ${seekTime}`);
 
     source.buffer = buffer;
     source.connect(context.destination);
-    source.start();
+    source.start(context.currentTime, seekTime);
     // set state on playback start
     this.setState({
       player: Object.assign({}, this.state.player, {
@@ -44,7 +45,7 @@ class SoundPlayer extends React.Component {
 
     const timeUpdater = (ts) => {
       const { player } = this.state;
-      const currentTime = player.context.currentTime - player.startTime;
+      const currentTime = player.context.currentTime - player.startTime + seekTime;
 
       this.setState({
         player: Object.assign({}, player, {
@@ -61,14 +62,15 @@ class SoundPlayer extends React.Component {
     requestAnimationFrame(timeUpdater)
   }
 
-  stop() {
+  stop(event, nodeID, cb) {
     const { player } = this.state;
-    player.source.stop();
+    player.source.stop(0);
     this.setState({
       player: Object.assign({}, player, {
         isPlaying: false,
       })
     });
+    player.source.onended = cb;
   }
 
   componentWillMount() {
@@ -93,10 +95,20 @@ class SoundPlayer extends React.Component {
       });
   }
 
+  seekClickHandler(e) {
+    const width = window.innerWidth - 20;
+    const ratio = e.clientX / width;
+    console.log(`'Seek to ${e.clientX / width * 100} of the audio`);
+    this.stop(null, null, () => {
+      this.play(null, null, ratio);
+    });
+  }
+
   render() {
-    console.log('render App');
+    // console.log('render App');
     const canvasWidth = window.innerWidth - 20;
     const canvasHeight = 150;
+
     return (
       <div>
         <Waveform buffer={this.state.player.buffer}
@@ -106,6 +118,7 @@ class SoundPlayer extends React.Component {
         <SeekBar currentTime={this.state.player.currentTime}
                   duration={this.state.player.duration}
                   width={canvasWidth}
+                  seekClickHandler={this.seekClickHandler.bind(this)}
                   height={canvasHeight}>
         </SeekBar>
         <br></br>
