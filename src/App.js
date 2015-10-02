@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { SeekBar } from './SeekBar';
 import { Waveform } from './Waveform';
+import { TimeDisplay } from './TimeDisplay';
 
 class SoundPlayer extends React.Component {
 
@@ -26,10 +27,8 @@ class SoundPlayer extends React.Component {
     const source = context.createBufferSource();
     const seekTime = ratio * buffer.duration;
     if (isPlaying) {
-      console.log('Can\'t trigger play twice');
-      return
+      return; // can't seek twice
     }
-    console.log(`seekTime ${seekTime}`);
 
     source.buffer = buffer;
     source.connect(context.destination);
@@ -44,17 +43,20 @@ class SoundPlayer extends React.Component {
     });
 
     const timeUpdater = (ts) => {
-      const { player } = this.state;
-      const currentTime = player.context.currentTime - player.startTime + seekTime;
+      const currentTime = this.state.player.context.currentTime - this.state.player.startTime + seekTime;
+
+      if (currentTime >= this.state.player.duration) {
+        this.stop(null, null, 0);
+      }
 
       this.setState({
-        player: Object.assign({}, player, {
-          progress: currentTime / player.duration,
+        player: Object.assign({}, this.state.player, {
+          progress: currentTime / this.state.player.duration,
           currentTime,
         })
       })
 
-      if (player.isPlaying) {
+      if (this.state.player.isPlaying) {
         requestAnimationFrame(timeUpdater);
       }
     }
@@ -98,7 +100,6 @@ class SoundPlayer extends React.Component {
   seekClickHandler(e) {
     const width = window.innerWidth - 20;
     const ratio = e.clientX / width;
-    console.log(`'Seek to ${e.clientX / width * 100} of the audio`);
     this.stop(null, null, () => {
       this.play(null, null, ratio);
     });
@@ -121,6 +122,9 @@ class SoundPlayer extends React.Component {
                   seekClickHandler={this.seekClickHandler.bind(this)}
                   height={canvasHeight}>
         </SeekBar>
+        <TimeDisplay currentTime={this.state.player.currentTime}
+                      duration={this.state.player.duration}>
+        </TimeDisplay>
         <br></br>
         <div style={{height:'200px'}}></div>
         Here goes the React Sound Player
