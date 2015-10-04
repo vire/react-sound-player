@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { SeekBar } from './SeekBar';
 import { Waveform } from './Waveform';
 import { TimeDisplay } from './TimeDisplay';
+import { PlaybackControl } from './PlaybackControl';
 
 class SoundPlayer extends React.Component {
 
@@ -105,6 +106,14 @@ class SoundPlayer extends React.Component {
     });
   }
 
+  playClickHandler(e) {
+    if(!this.state.player.isPlaying) {
+      this.play(null, null, 0); // play from...
+    } else {
+      this.stop(null, null, 0);
+    }
+  }
+
   render() {
     // console.log('render App');
     const canvasWidth = window.innerWidth - 20;
@@ -116,15 +125,17 @@ class SoundPlayer extends React.Component {
                   width={canvasWidth}
                   height={canvasHeight}>
         </Waveform>
+        <TimeDisplay currentTime={this.state.player.currentTime}
+                      duration={this.state.player.duration}>
+        </TimeDisplay>
         <SeekBar currentTime={this.state.player.currentTime}
                   duration={this.state.player.duration}
                   width={canvasWidth}
                   seekClickHandler={this.seekClickHandler.bind(this)}
                   height={canvasHeight}>
         </SeekBar>
-        <TimeDisplay currentTime={this.state.player.currentTime}
-                      duration={this.state.player.duration}>
-        </TimeDisplay>
+        <PlaybackControl playClickHandler={this.playClickHandler.bind(this)}>
+        </PlaybackControl>
         <br></br>
         <div style={{height:'200px'}}></div>
         Here goes the React Sound Player

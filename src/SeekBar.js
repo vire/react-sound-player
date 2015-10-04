@@ -24,7 +24,7 @@ export class SeekBar extends Component {
     context.strokeStyle = '#F00';
     context.moveTo(Math.round(xCoordinate), 0);
     context.lineTo(Math.round(xCoordinate), canvas.height);
-    context.lineWidth = 2;
+    context.lineWidth = 1;
     context.stroke();
   }
 
