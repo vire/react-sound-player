@@ -6,11 +6,33 @@ export class PlaybackControl extends Component {
   }
 
   render() {
+    // Todo Remove
+    const style = {
+      width: 35,
+      height: 25,
+      padding: '5px 0',
+      background: 'rgba(255, 255, 255, 0.4)',
+      border: '1px dotted black',
+      position: 'absolute',
+      top: 0,
+      left: 5,
+      fontSize: 'small',
+      textAlign: 'center',
+      cursor: 'default',
+    };
+
+    const buttonText = this.props.isPlaying ? 'pause' : 'play';
+
     return (
       <div onClick={this.props.playClickHandler}
-            style={{width:45, height:45, background:'#F00', position:'absolute', top:0, left:5}}>
-        PlayButton
+          style={style}>
+          {buttonText}
       </div>
-    )
+    );
   }
 }
+
+PlaybackControl.propTypes = {
+  playClickHandler: React.PropTypes.func.isRequired,
+  isPlaying: React.PropTypes.bool.isRequired,
+};
