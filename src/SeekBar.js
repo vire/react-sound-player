@@ -11,7 +11,7 @@ export class SeekBar extends Component {
   }
 
   shouldComponentUpdate() {
-    return false // only if winow dimension changes or playback stops
+    return false; // only if winow dimension changes or playback stops
   }
 
   renderSeekBar(progress) {
@@ -31,21 +31,30 @@ export class SeekBar extends Component {
   render() {
     const {
       width,
-      height
+      height,
     } = this.props;
-    console.log('render: SeekBar + props', this.props);
+
+    const style = {
+      position: 'absolute',
+      border: '1px solid black',
+      top: 0,
+      left: 0,
+    };
+
     return (
       <div onClick={this.props.seekClickHandler}>
         <canvas ref="seekBar"
                 width={width}
                 height={height}
-                style={{
-                  position:'absolute',
-                  border: '1px solid black',
-                  top: 0,
-                  left:0}}>
+                style={style} >
         </canvas>
       </div>
-    )
+    );
   }
 }
+
+SeekBar.propTypes = {
+  seekClickHandler: React.PropTypes.func.isRequired,
+  width: React.PropTypes.number.isRequired,
+  height: React.PropTypes.number.isRequired,
+};
